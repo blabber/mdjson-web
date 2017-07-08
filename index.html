@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title>MetalDays Running Order</title>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse-1" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">MetalDays Running Order</a>
+				</div>
+
+				<div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+					<ul class="nav navbar-nav visible-lg-block visible-xs-block" data-bind="foreach: days">
+						<!-- ko template: {name: "template-day-nav"} --><!-- /ko -->
+					</ul>
+
+					<ul class="nav navbar-nav hidden-lg hidden-xs">
+						<li class="dropdown" data-bind="ifnot: runningorder() === undefined">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								<span data-bind="text: dayLabel"></span><span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu" data-bind="template: {name: 'template-day-nav', foreach: days}"></ul>
+						</li>
+					</ul>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<a href="#" data-bind="click: loadData">
+								<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container-fluid">
+			<!-- ko if: infoMessage().length > 0 -->
+				<div class="alert alert-info" role="alert" data-bind="text: infoMessage"></div>
+			<!-- /ko -->
+
+			<!-- ko if: errorMessage().length > 0 -->
+				<div class="alert alert-danger alert-dismissible" role="alert" >
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<span data-bind="text: errorMessage"></span>
+				</div>
+			<!-- /ko -->
+
+			<div class="page-header">
+				<h1 data-bind="text: dayLabel"></h1>
+			</div>
+
+			<div class="panel-group visible-xs" id="accordion" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default" data-bind="foreach: stages">
+					<div class="panel-heading" role="tab" data-bind="attr: { id: 'heading_'+$index() }">
+						<h4 class="panel-title">
+							<a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" data-bind="text: label, attr: { href: '#collapse_'+$index(), 'aria-controls': 'collapse_'+$index(), class: $index() > 0 ? 'collapsed' : '' }">
+							</a>
+						</h4>
+					</div>
+					<div class="panel-collapse collapse in" role="tabpanel" data-bind="attr: { id: 'collapse_'+$index(), 'aria-labelledby': 'heading_'+$index(), class: 'panel-collapse collapse'+($index() === 0 ? ' in' :'')}, template: { name: 'template-stage-events' }">
+					</div>
+				</div>
+			</div>
+
+			<div class="row hidden-xs" data-bind="foreach: stages">
+				<div class="col-sm-4 col-md-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title" data-bind="text: label"></h3>
+						</div>
+						<!-- ko template: { name: 'template-stage-events' } --><!-- /ko -->
+					</div>
+				</div>
+			</div>
+
+			<footer class="footer">
+				<hr></hr>
+				<div class="container">
+					<span class="text-muted">This is an unofficial <a href="http://www.metaldays.net">MetalDays</a> Running Order.</span>
+				</div>
+			</footer>
+		</div>
+
+		<script type="text/html" id="template-day-nav">
+			<li data-bind="attr: { class: $index() === $parent.selectedDay() ? 'active' : '' }">
+				<a href="#" data-bind="text: label, click: function() { vm.selectDay($index()) }"></a>
+			</li>
+		</script>
+
+		<script type="text/html" id="template-stage-events">
+			<table class="table" data-bind="foreach: events">
+				<tr>
+					<td><span data-bind="text: time"></span></td>
+					<td><a target="_blank" data-bind="text: label, attr: { href: url}"></a></td>
+				</tr>
+			</table>
+		</script>
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<!-- Knockout -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+
+		<!-- mdjson javascript -->
+		<script type="text/javascript" src="./mdjson.js"></script>
+	</body>
+</html>
