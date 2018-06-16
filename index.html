@@ -116,9 +116,9 @@
 
 		<script type="text/html" id="template-stage-events">
 			<table class="table" data-bind="foreach: events">
-				<tr>
+				<tr data-bind="attr: { class: tableRowClass(timestamps) }">
 					<td><span data-bind="text: time"></span></td>
-					<td><a target="_blank" data-bind="text: label, attr: { href: url}"></a></td>
+					<td><a target="_blank" data-bind="text: label, attr: { href: url }"></a></td>
 				</tr>
 			</table>
 		</script>

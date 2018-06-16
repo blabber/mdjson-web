@@ -8,6 +8,7 @@ function ViewModel() {
 	self.selectedDay = ko.observable(0);
 	self.infoMessage = ko.observable("");
 	self.errorMessage = ko.observable("");
+	self.now = ko.observable(new Date());
 
 	self.dayLabel = ko.pureComputed(function() {
 		if (self.runningorder() === undefined) {
@@ -34,6 +35,11 @@ function ViewModel() {
 		self.selectedDay(day);
 	};
 
+	self.tick = function() {
+		self.now(new Date());
+	};
+	setInterval(self.tick, 3000);
+
 	self.loadData = function() {
 		self.infoMessage("Loading...");
 		self.errorMessage("");
@@ -58,6 +64,25 @@ function ViewModel() {
 	}
 
 	self.loadData();
+}
+
+function tableRowClass(timestamps) {
+	if (timestamps == null) {
+		return "";
+	}
+
+	var start = new Date(timestamps.start * 1000);
+	var end = new Date(timestamps.end * 1000);
+
+	if (vm.now() >= end) {
+		return "active";
+	}
+
+	if (vm.now() >= start && vm.now() < end * 1000) {
+		return "danger";
+	}
+
+	return "";
 }
 
 var vm = new ViewModel();
